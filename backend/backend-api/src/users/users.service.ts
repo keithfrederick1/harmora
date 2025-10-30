@@ -22,7 +22,23 @@ export class UsersService {
 
 async findOneByGoogleId(googleId: string): Promise<User | null> {
   return this.userRepository.findOne({ where: { googleId } });
-}
+} 
+
+async findOne(id: string) {
+    return this.userRepository.findOne({ where: { id: Number(id) } });
+  }
+  
+  async update(id: string, updateData: Partial<User>) {
+    await this.userRepository.update(id, updateData);
+    return this.findOne(id);
+  }
+  
+  async remove(id: string) {
+    const user = await this.findOne(id);
+    await this.userRepository.delete(id);
+    return user;
+  }
+  
 
 async createFromGoogle(user: any): Promise<User> {
   const newUser = this.userRepository.create({
